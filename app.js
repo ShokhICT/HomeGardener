@@ -3,15 +3,16 @@ const mongoose = require("mongoose");
 const path = require("path");
 const bodyParser = require("body-parser");
 const fs = require("fs");
-const app = express();
 const multer = require("multer");
-
-const port = process.env.PORT || 3000;
+const app = express();
+const port = 3000;
 
 mongoose
     .connect(
-        "mongodb+srv://ermsho:3291929Shoh@homegardener.qkfaz6c.mongodb.net/",
+        "mongodb+srv://ermsho:3291929Shoh@homegardener.qkfaz6c.mongodb.net/your-database-name", // replace `your-database-name` with the actual database name
         {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
             connectTimeoutMS: 10000,
             socketTimeoutMS: 45000,
         }
@@ -28,7 +29,6 @@ const uploadDir = path.join(__dirname, "uploads");
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir);
 }
-
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, "uploads/");
@@ -89,8 +89,7 @@ app.get("/create", (req, res) => {
 
 app.post("/create", upload.single("plantsImage"), async (req, res) => {
     try {
-        const { author, title, plantsType, plantsVariety, plantDate, description } =
-            req.body;
+        const { author, title, plantsType, plantsVariety, plantDate, description } = req.body;
         const post = new Post({
             author,
             title,
@@ -111,7 +110,6 @@ app.post("/create", upload.single("plantsImage"), async (req, res) => {
 app.get("/edit/:id", async (req, res) => {
     try {
         const post = await Post.findById(req.params.id);
-        console.log("asd", req);
         res.render("edit", { post: post });
     } catch (err) {
         console.error("Error fetching post:", err);
@@ -119,9 +117,23 @@ app.get("/edit/:id", async (req, res) => {
     }
 });
 
-app.post("/edit/:id", async (req, res) => {
+app.post("/edit/:id", upload.single("plantsImage"), async (req, res) => {
     try {
-        await Post.findByIdAndUpdate(req.params.id, req.body);
+        const { author, title, plantsType, plantsVariety, plantDate, description } = req.body;
+        const updateData = {
+            author,
+            title,
+            plantsType,
+            plantsVariety,
+            description,
+            plantDate,
+        };
+
+        if (req.file) {
+            updateData.plantsImage = req.file.filename;
+        }
+
+        await Post.findByIdAndUpdate(req.params.id, updateData);
         res.redirect("/");
     } catch (err) {
         console.error("Error updating post:", err);
