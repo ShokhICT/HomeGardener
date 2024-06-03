@@ -14,7 +14,7 @@ html
     .container
       .card
         .card-header
-          h1.mb-4 Create New Plant Order
+          h1.mb-4 Create New Plant 
         .card-body
           form(action='/create' method='POST' enctype="multipart/form-data" class='needs-validation' novalidate)
             .form-group
@@ -51,17 +51,6 @@ html
               input.form-control(type='file' name='plantsImage' accept='image/*' required)
               .invalid-feedback
                 | Please provide a plant image.
-            // Location inputs
-            .form-group
-              label(for='latitude') Latitude
-              input.form-control(type='text' name='latitude' placeholder='Enter latitude' required)
-              .invalid-feedback
-                | Please provide a latitude.
-            .form-group
-              label(for='longitude') Longitude
-              input.form-control(type='text' name='longitude' placeholder='Enter longitude' required)
-              .invalid-feedback
-                | Please provide a longitude.
             .form-group
               label(for='description') Description
               textarea.form-control(name='description' rows='3' placeholder='Enter description' required)
