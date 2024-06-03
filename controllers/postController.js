@@ -1,47 +1,79 @@
 const mongoose = require("mongoose");
 
-const postSchema = new mongoose.Schema({
-    title: String,
-    content: String,
-    author: String,
+const Post = mongoose.model("Post", {
+    author: { type: String, required: true },
+    title: { type: String, required: true },
+    plantsType: {
+        type: String,
+        enum: ["flowers", "vegetables", "fruits", "herbs"],
+        required: true,
+    },
+    plantsVariety: { type: String, required: true },
+    plantsImage: { type: String, required: true },
+    description: { type: String, required: true },
 });
 
-const Post = mongoose.model("Post", postSchema);
+const postController = {};
 
-exports.getAllPosts = async (req, res) => {
+postController.getAllPosts = async (req, res) => {
     try {
         const posts = await Post.find();
-        res.render("index", { posts: posts });
+        res.render("index", { posts });
     } catch (err) {
         console.error("Error fetching posts:", err);
         res.status(500).send("Server Error");
     }
 };
 
-exports.getPostById = async (req, res) => {
+postController.getPostById = async (req, res) => {
     try {
         const post = await Post.findById(req.params.id);
-        res.render("postDetail", { post: post });
+        res.render("post-detail", { post });
     } catch (err) {
         console.error("Error fetching post:", err);
         res.status(500).send("Server Error");
     }
 };
 
-exports.createPost = async (req, res) => {
+postController.createPost = async (req, res) => {
+    try {
+        const { author, title, plantsType, plantsVariety, description } = req.body;
+        const fileUrl =
+            req.protocol + "://" + req.get("host") + "/" + req.file.path;
+        const post = new Post({
+            author,
+            title,
+            plantsType,
+            plantsVariety,
+            plantsImage: fileUrl,
+            description,
+        });
+        await post.save();
+        res.redirect("/");
+    } catch (err) {
+        console.error("Error creating post:", err);
+        res.status(500).send("Server Error");
+    }
 };
 
-exports.updatePost = async (req, res) => {
+postController.editPost = async (req, res) => {
+    try {
+        await Post.findByIdAndUpdate(req.params.id, req.body);
+        res.redirect("/");
+    } catch (err) {
+        console.error("Error updating post:", err);
+        res.status(500).send("Server Error");
+    }
 };
 
-exports.deletePost = async (req, res) => {
-    app.get("/delete/:id", async (req, res) => {
-        try {
-            await Post.findByIdAndDelete(req.params.id);
-            res.redirect("/");
-        } catch (err) {
-            console.error("Error deleting post:", err);
-            res.status(500).send("Server Error");
-        }
-    });
+postController.deletePost = async (req, res) => {
+    try {
+        await Post.findByIdAndDelete(req.params.id);
+        res.redirect("/");
+    } catch (err) {
+        console.error("Error deleting post:", err);
+        res.status(500).send("Server Error");
+    }
 };
+
+module.exports = postController;

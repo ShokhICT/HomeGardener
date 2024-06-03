@@ -1,24 +1,86 @@
 doctype html
 html
-    head
-        title Edit Post
-    body
-        .navbar
-            div
-                a(href="/") Home Gardener
-        h1 Edit Post
-        form(action=`/edit/${post._id}` method="POST")
-            div
-                label(for="author") Author:
-                input(type="text" name="author" value=post.author)
-            div
-                label(for="title") Title:
-                input(type="text" name="title" value=post.title)
-            div
-                label(for="plantsType") Plants Type:
-                input(type="text" name="plantsType" value=post.plantsType)
-            div
-                label(for="plantsVariety") Plants Variety:
-                input(type="text" name="plantsVariety" value=post.plantsVariety)
-            div
-                button(type="submit") Save Changes
+  head
+    title Edit Post
+    link(rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css')
+    style.
+      body {
+        background-color: #f8f9fa;
+      }
+      .container {
+        margin-top: 50px;
+      }
+  body
+    .container
+      .card
+        .card-header
+          h1.mb-4 Edit Plant Blog
+        .card-body
+          form(action=`/edit/${post._id}` method='POST' enctype="multipart/form-data" class='needs-validation' novalidate)
+            .form-group
+              label(for='author') Gardener
+              input.form-control(type='text' name='author' placeholder='Enter gardener name' value=post.author required)
+              .invalid-feedback
+                | Please provide a gardener name.
+            .form-group
+              label(for='title') Title
+              input.form-control(type='text' name='title' placeholder='Enter post title' value=post.title required)
+              .invalid-feedback
+                | Please provide a post title.
+            .form-group
+              label(for='plantsType') Plants Type
+              select.form-control(name='plantsType' required)
+                option(value='flowers' selected=post.plantsType==='flowers') Flowers
+                option(value='vegetables' selected=post.plantsType==='vegetables') Vegetables
+                option(value='fruits' selected=post.plantsType==='fruits') Fruits
+                option(value='herbs' selected=post.plantsType==='herbs') Herbs
+              .invalid-feedback
+                | Please select a plant type.
+            .form-group
+              label(for='plantsVariety') Plants Variety
+              input.form-control(type='text' name='plantsVariety' placeholder='Enter plants variety' value=post.plantsVariety required)
+              .invalid-feedback
+                | Please provide a plants variety.
+            .form-group
+              label(for='plantDate') Planting Date
+              input.form-control(type='date' id='plantDate' name='plantDate' value=post.plantDate required)
+              .invalid-feedback
+                | Please provide a planting date.
+            .form-group
+              label(for='plantsImage') Plants Image
+              input.form-control(type='file' name='plantsImage' accept='image/*')
+              .invalid-feedback
+                | Please provide a plant image.
+            .form-group
+              label(for='description') Description
+              textarea.form-control(name='description' rows='3' placeholder='Enter description' required)= post.description
+              .invalid-feedback
+                | Please provide a description.
+            button.btn.btn-primary.btn-block(type='submit') Update Post
+    script(src='https://code.jquery.com/jquery-3.3.1.slim.min.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js')
+    script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js')
+    script.
+      (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+          var forms = document.getElementsByClassName('needs-validation');
+          var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+              if (form.checkValidity() === false) {
+                event.preventDefault();
+                event.stopPropagation();
+              }
+              form.classList.add('was-validated');
+            }, false);
+          });
+
+          var dateInput = document.getElementById('plantDate');
+          var today = new Date();
+          var day = ("0" + today.getDate()).slice(-2);
+          var month = ("0" + (today.getMonth() + 1)).slice(-2);
+          var year = today.getFullYear();
+          var todayDate = `${year}-${month}-${day}`;
+          dateInput.setAttribute('min', todayDate);
+        }, false);
+      })();

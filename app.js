@@ -2,9 +2,10 @@ const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
 const bodyParser = require("body-parser");
-
+const fs = require("fs");
 const app = express();
 const port = 3000;
+const multer = require("multer");
 
 mongoose
     .connect(
@@ -21,7 +22,32 @@ process.on("SIGINT", async () => {
     await mongoose.connection.close();
     process.exit(0);
 });
+const uploadDir = path.join(__dirname, "uploads");
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir);
+}
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, "uploads/");
+    },
+    filename: function (req, file, cb) {
+        cb(
+            null,
+            file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+        );
+    },
+});
 
+const upload = multer({ storage: storage });
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.set("view engine", "pug");
+app.set("views", path.join(__dirname, "views"));
+
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+app.use(bodyParser.urlencoded({ extended: true }));
 const postSchema = new mongoose.Schema({
     author: { type: String, required: true },
     title: { type: String, required: true },
@@ -30,12 +56,16 @@ const postSchema = new mongoose.Schema({
         enum: ["flowers", "vegetables", "fruits", "herbs"],
         required: true,
     },
+    plantDate: { type: Date, required: true },
     plantsVariety: { type: String, required: true },
     plantsImage: { type: String, required: true },
     description: { type: String, required: true },
 });
 const Post = mongoose.model("Post", postSchema);
+app.set("view engine", "pug");
+app.set("views", path.join(__dirname, "views"));
 
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.set("view engine", "pug");
@@ -64,16 +94,24 @@ app.get("/post-detail/:id", async (req, res) => {
 app.get("/create", (req, res) => {
     res.render("create");
 });
-
-app.post("/create", async (req, res) => {
+app.post("/create", upload.single("plantsImage"), async (req, res) => {
     try {
-        const { id, author, title, plantsType, plantsVariety } = req.body;
-        const post = new Post({ id, author, title, plantsType, plantsVariety });
+        const { author, title, plantsType, plantsVariety, plantDate, description } =
+            req.body;
+        const post = new Post({
+            author,
+            title,
+            plantsType,
+            plantsVariety,
+            plantsImage: req.file.filename,
+            description,
+            plantDate,
+        });
         await post.save();
         res.redirect("/");
-    } catch (err) {
-        console.error("Error creating post:", err);
-        res.status(500).send("Server Error");
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(500).send("Server error");
     }
 });
 
@@ -106,7 +144,6 @@ app.get("/delete/:id", async (req, res) => {
         res.status(500).send("Server Error");
     }
 });
-
 
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);

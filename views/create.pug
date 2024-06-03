@@ -14,15 +14,19 @@ html
     .container
       .card
         .card-header
-          h1.mb-4 Create New Post
+          h1.mb-4 Create New Plant Blog
         .card-body
-          form(action='/create' method='POST')
+          form(action='/create' method='POST' enctype="multipart/form-data" class='needs-validation' novalidate)
             .form-group
-              label(for='author') Author
-              input.form-control(type='text' name='author' placeholder='Enter author name' required)
+              label(for='author') Gardener
+              input.form-control(type='text' name='author' placeholder='Enter gardener name' required)
+              .invalid-feedback
+                | Please provide a gardener name.
             .form-group
               label(for='title') Title
               input.form-control(type='text' name='title' placeholder='Enter post title' required)
+              .invalid-feedback
+                | Please provide a post title.
             .form-group
               label(for='plantsType') Plants Type
               select.form-control(name='plantsType' required)
@@ -30,16 +34,53 @@ html
                 option(value='vegetables') Vegetables
                 option(value='fruits') Fruits
                 option(value='herbs') Herbs
+              .invalid-feedback
+                | Please select a plant type.
             .form-group
               label(for='plantsVariety') Plants Variety
               input.form-control(type='text' name='plantsVariety' placeholder='Enter plants variety' required)
+              .invalid-feedback
+                | Please provide a plants variety.
+            .form-group
+              label(for='plantDate') Planting Date
+              input.form-control(type='date' id='plantDate' name='plantDate' placeholder='Enter planting date' required)
+              .invalid-feedback
+                | Please provide a planting date.
             .form-group
               label(for='plantsImage') Plants Image
               input.form-control(type='file' name='plantsImage' accept='image/*' required)
+              .invalid-feedback
+                | Please provide a plant image.
             .form-group
               label(for='description') Description
               textarea.form-control(name='description' rows='3' placeholder='Enter description' required)
+              .invalid-feedback
+                | Please provide a description.
             button.btn.btn-primary.btn-block(type='submit') Add Post
     script(src='https://code.jquery.com/jquery-3.3.1.slim.min.js')
     script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js')
     script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js')
+    script.
+      (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+          var forms = document.getElementsByClassName('needs-validation');
+          var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+              if (form.checkValidity() === false) {
+                event.preventDefault();
+                event.stopPropagation();
+              }
+              form.classList.add('was-validated');
+            }, false);
+          });
+
+          var dateInput = document.getElementById('plantDate');
+          var today = new Date();
+          var day = ("0" + today.getDate()).slice(-2);
+          var month = ("0" + (today.getMonth() + 1)).slice(-2);
+          var year = today.getFullYear();
+          var todayDate = `${year}-${month}-${day}`;
+          dateInput.setAttribute('min', todayDate);
+        }, false);
+      })();

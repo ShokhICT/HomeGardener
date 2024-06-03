@@ -10,20 +10,31 @@ html(lang="en")
     nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
       .container.d-flex.justify-content-between
         a.navbar-brand(href="#") Home Gardener
-      
         ul.navbar-nav
-         
           li.nav-item
             a.nav-link(href="/create") Add Post
     .container.mt-5
       a.btn.mb-4.btn-primary(href="/") Orqaga
       .card.mb-4
         .card-body
-          h1.card-title= post.title
+          .d-flex.justify-content-between
+            h1.card-title= post.title
+            h1.card-title(id='formattedDate')
+          .d-flex.justify-content-center  
+            img.mx-auto.block(src=`/uploads/${post.plantsImage}` alt="Plant Image")
           p.card-text Author: #{post.author}
           p.card-text Plants Type: #{post.plantsType}
           p.card-text Plants Variety: #{post.plantsVariety}
-          p.card-text Description: #{post.description}
+          p.card-text  #{post.description}
     script(src="https://code.jquery.com/jquery-3.5.1.slim.min.js")
     script(src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js")
     script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js")
+    script.
+      document.addEventListener('DOMContentLoaded', function() {
+        var plantDate = "#{post.plantDate}";
+        var dateParts = plantDate.split(' ');
+        if (dateParts.length > 3) {
+          var formattedDate = `${dateParts[2]}.${dateParts[1]}.${dateParts[3]}`;
+          document.getElementById('formattedDate').textContent = formattedDate;
+        }
+      });
