@@ -1,0 +1,45 @@
+doctype html
+html
+  head
+    title Create Post
+    link(rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css')
+    style.
+      body {
+        background-color: #f8f9fa;
+      }
+      .container {
+        margin-top: 50px;
+      }
+  body
+    .container
+      .card
+        .card-header
+          h1.mb-4 Create New Post
+        .card-body
+          form(action='/create' method='POST')
+            .form-group
+              label(for='author') Author
+              input.form-control(type='text' name='author' placeholder='Enter author name' required)
+            .form-group
+              label(for='title') Title
+              input.form-control(type='text' name='title' placeholder='Enter post title' required)
+            .form-group
+              label(for='plantsType') Plants Type
+              select.form-control(name='plantsType' required)
+                option(value='flowers') Flowers
+                option(value='vegetables') Vegetables
+                option(value='fruits') Fruits
+                option(value='herbs') Herbs
+            .form-group
+              label(for='plantsVariety') Plants Variety
+              input.form-control(type='text' name='plantsVariety' placeholder='Enter plants variety' required)
+            .form-group
+              label(for='plantsImage') Plants Image
+              input.form-control(type='file' name='plantsImage' accept='image/*' required)
+            .form-group
+              label(for='description') Description
+              textarea.form-control(name='description' rows='3' placeholder='Enter description' required)
+            button.btn.btn-primary.btn-block(type='submit') Add Post
+    script(src='https://code.jquery.com/jquery-3.3.1.slim.min.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js')
+    script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js')
