@@ -47,6 +47,11 @@ html
               .invalid-feedback
                 | Please provide a planting date.
             .form-group
+              label(for='plantLocation') Planting location
+              input.form-control(type='text' id='plantLocation' name='plantLocation' placeholder='Enter planting location' required)
+              .invalid-feedback
+                | Please provide a planting location.
+            .form-group
               label(for='plantsImage') Plants Image
               input.form-control(type='file' name='plantsImage' accept='image/*' required)
               .invalid-feedback

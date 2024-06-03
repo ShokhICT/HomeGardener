@@ -57,6 +57,7 @@ const postSchema = new mongoose.Schema({
         required: true,
     },
     plantDate: { type: Date, required: true },
+    plantLocation: { type: String, required: true },
     plantsVariety: { type: String, required: true },
     plantsImage: { type: String, required: true },
     description: { type: String, required: true },
@@ -89,12 +90,13 @@ app.get("/create", (req, res) => {
 
 app.post("/create", upload.single("plantsImage"), async (req, res) => {
     try {
-        const { author, title, plantsType, plantsVariety, plantDate, description } = req.body;
+        const { author, title, plantsType, plantLocation, plantsVariety, plantDate, description } = req.body;
         const post = new Post({
             author,
             title,
             plantsType,
             plantsVariety,
+            plantLocation,
             plantsImage: req.file.filename,
             description,
             plantDate,
@@ -119,11 +121,12 @@ app.get("/edit/:id", async (req, res) => {
 
 app.post("/edit/:id", upload.single("plantsImage"), async (req, res) => {
     try {
-        const { author, title, plantsType, plantsVariety, plantDate, description } = req.body;
+        const { author, title, plantsType, plantLocation, plantsVariety, plantDate, description } = req.body;
         const updateData = {
             author,
             title,
             plantsType,
+            plantLocation,
             plantsVariety,
             description,
             plantDate,
