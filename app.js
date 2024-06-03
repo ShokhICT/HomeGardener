@@ -6,7 +6,7 @@ const fs = require("fs");
 const app = express();
 const multer = require("multer");
 
-const port = process.env.PORT || 3000; // Use process.env.PORT for Heroku
+const port = process.env.PORT || 3000;
 
 mongoose
     .connect(
