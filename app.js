@@ -4,8 +4,9 @@ const path = require("path");
 const bodyParser = require("body-parser");
 const fs = require("fs");
 const app = express();
-const port = 3000;
 const multer = require("multer");
+
+const port = process.env.PORT || 3000; // Use process.env.PORT for Heroku
 
 mongoose
     .connect(
@@ -22,10 +23,12 @@ process.on("SIGINT", async () => {
     await mongoose.connection.close();
     process.exit(0);
 });
+
 const uploadDir = path.join(__dirname, "uploads");
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir);
 }
+
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, "uploads/");
@@ -45,9 +48,6 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.set("view engine", "pug");
 app.set("views", path.join(__dirname, "views"));
 
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
-app.use(bodyParser.urlencoded({ extended: true }));
 const postSchema = new mongoose.Schema({
     author: { type: String, required: true },
     title: { type: String, required: true },
@@ -62,14 +62,6 @@ const postSchema = new mongoose.Schema({
     description: { type: String, required: true },
 });
 const Post = mongoose.model("Post", postSchema);
-app.set("view engine", "pug");
-app.set("views", path.join(__dirname, "views"));
-
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-app.use(bodyParser.urlencoded({ extended: true }));
-
-app.set("view engine", "pug");
-app.set("views", path.join(__dirname, "views"));
 
 app.get("/", async (req, res) => {
     try {
@@ -94,6 +86,7 @@ app.get("/post-detail/:id", async (req, res) => {
 app.get("/create", (req, res) => {
     res.render("create");
 });
+
 app.post("/create", upload.single("plantsImage"), async (req, res) => {
     try {
         const { author, title, plantsType, plantsVariety, plantDate, description } =
@@ -135,6 +128,7 @@ app.post("/edit/:id", async (req, res) => {
         res.status(500).send("Server Error");
     }
 });
+
 app.get("/delete/:id", async (req, res) => {
     try {
         await Post.findByIdAndDelete(req.params.id);

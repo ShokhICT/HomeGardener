@@ -58,7 +58,8 @@ postController.createPost = async (req, res) => {
 
 postController.editPost = async (req, res) => {
     try {
-        await Post.findByIdAndUpdate(req.params.id, req.body);
+        const { author, title, plantsType, plantsVariety, description } = req.body;
+        await Post.findByIdAndUpdate(req.params.id, { author, title, plantsType, plantsVariety, description });
         res.redirect("/");
     } catch (err) {
         console.error("Error updating post:", err);

@@ -1,6 +1,4 @@
-
 const express = require("express");
-
 const router = express.Router();
 const postController = require("../controllers/postController");
 
@@ -11,7 +9,7 @@ router.get("/create", (req, res) => {
 });
 router.post("/create", postController.createPost);
 router.get("/edit/:id", postController.editPost);
-router.post("/edit/:id", postController.updatePost);
+router.post("/edit/:id", postController.editPost);
 router.get("/delete/:id", postController.deletePost);
 
 module.exports = router;
