@@ -4,11 +4,7 @@ const path = require("path");
 const bodyParser = require("body-parser");
 const fs = require("fs");
 const multer = require("multer");
-//const app = express();
-//const port = 3000;
-const express = require('express');
 const app = express();
-const nodeEnv = process.env.NODE_ENV;
 const PORT = process.env.PORT || 3000;
 
 
