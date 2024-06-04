@@ -4,8 +4,8 @@ const path = require("path");
 const bodyParser = require("body-parser");
 const fs = require("fs");
 const multer = require("multer");
-const app = express();
-const port = 3000;
+//const app = express();
+//const port = 3000;
 
 mongoose
     .connect(
@@ -154,6 +154,10 @@ app.get("/delete/:id", async (req, res) => {
     }
 });
 
-app.listen(port, () => {
-    console.log(`Server is running at http://localhost:${port}`);
+const express = require('express');
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
