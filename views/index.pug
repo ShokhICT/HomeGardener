@@ -5,31 +5,48 @@ html(lang="en")
     meta(name="viewport" content="width=device-width, initial-scale=1.0")
     title Home Gardener Posts
     link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css")
+    style.
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+      main {
+        flex: 1;
+      }
       
   body
     nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
       .container.d-flex.justify-content-between
-        a.navbar-brand(href="#") Home Gardener
-      
+        a.navbar-brand(href="#") Home Gardener Assistant
         ul.navbar-nav
-         
           li.nav-item
             a.nav-link(href="/create") Add Post
-    .container
+    
+    main.container
       h1.my-4 Home Gardener Posts
       .row
-       each post in posts
-        .col-12.col-md-6
-          .card.mb-4
-            .card-body
-              h5.card-title= post.title
-              p.card-text Author: #{post.author}
-              p.card-text Plants Type: #{post.plantsType}
-              p.card-text Plants Variety: #{post.plantsVariety}
-              p.card-text Plants Location: #{post.plantLocation}
-              a.btn.btn-sm.mr-1.btn-primary(href=`/edit/${post._id}`) Edit
-              a.btn.btn-sm.mr-1.btn-danger(href=`/delete/${post._id}`) Delete
-              a.btn.btn-sm.mr-1.btn-primary(href=`/post-detail/${post._id}`) Read More
+        if posts.length > 0
+          each post in posts
+            .col-12.col-md-6
+              .card.mb-4
+                .card-body
+                  h5.card-title= post.title
+                  p.card-text Author: #{post.author}
+                  p.card-text Plants Type: #{post.plantsType}
+                  p.card-text Plants Variety: #{post.plantsVariety}
+                  p.card-text Plants Location: #{post.plantLocation}
+                  a.btn.btn-sm.mr-1.btn-primary(href=`/edit/${post._id}`) Edit
+                  a.btn.btn-sm.mr-1.btn-danger(href=`/delete/${post._id}`) Delete
+                  a.btn.btn-sm.mr-1.btn-primary(href=`/post-detail/${post._id}`) Read More
+        else
+          .col-12
+            .alert.alert-warning.mt-4 No posts available.
+
+    footer.bg-dark.text-white.py-3.mt-4
+      .container.text-center
+        p.mb-0 &copy; #{new Date().getFullYear()} This web application was created to fulfill Web Technology module’s requirements and does not represent an actual company or service.
+      
     script(src="https://code.jquery.com/jquery-3.5.1.slim.min.js")
     script(src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js")
     script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js")

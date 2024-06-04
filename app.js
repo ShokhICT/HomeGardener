@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 3000;
 
 mongoose
     .connect(
-        "mongodb+srv://ermsho:3291929Shoh@homegardener.qkfaz6c.mongodb.net/your-database-name", // replace `your-database-name` with the actual database name
+        "mongodb+srv://ermsho:3291929Shoh@homegardener.qkfaz6c.mongodb.net/your-database-name",
         {
             useNewUrlParser: true,
             useUnifiedTopology: true,
